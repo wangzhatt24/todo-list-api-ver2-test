@@ -61,8 +61,8 @@ try {
 }
 
 //set up routes
-app.get("/todos", (req, res) => {
-  TodoModel.findAll()
+app.get("/todos", async (req, res) => {
+  await TodoModel.findAll()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -71,10 +71,10 @@ app.get("/todos", (req, res) => {
     });
 });
 
-app.get("/todos/:id", (req, res) => {
+app.get("/todos/:id", async (req, res) => {
   const todoId = req.params.id;
 
-  TodoModel.findAll({
+  await TodoModel.findAll({
     where: {
       id: todoId,
     },
@@ -83,24 +83,24 @@ app.get("/todos/:id", (req, res) => {
     .catch((error) => res.status(400).send(error));
 });
 
-app.post("/todos", (req, res) => {
+app.post("/todos", async (req, res) => {
   const todo = TodoModel.build({
     title: req.body.title,
     content: req.body.content,
     completed: req.body.completed,
   });
 
-  todo
+  await todo
     .save()
     .then((data) => res.status(201).send(data))
     .catch((error) => res.status(400).send(error));
 });
 
-app.patch("/todos/:id", (req, res) => {
+app.patch("/todos/:id", async (req, res) => {
   //get field need to be update
   const todoId = req.params.id;
 
-  TodoModel.update(
+  await TodoModel.update(
     {
       title: req.body.title,
       content: req.body.content,
@@ -116,11 +116,11 @@ app.patch("/todos/:id", (req, res) => {
     .catch((error) => res.status(400).send(error));
 });
 
-app.delete("/todos/:id", (req, res) => {
+app.delete("/todos/:id", async (req, res) => {
   //get field id is to be delete
   const todoId = req.params.id;
 
-  TodoModel.destroy({
+  await TodoModel.destroy({
     where: {
       id: todoId,
     },
